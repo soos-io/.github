@@ -1,6 +1,6 @@
 {
-  "name": "NPM check workflow",
-  "description": "Runs format, lint, typecheck and tests for a TypeScript project",
+  "name": "NPM run check",
+  "description": "Runs npm check for TypeScript projects",
   "categories": [
       "TypeScript"
   ]
