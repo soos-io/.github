@@ -1,0 +1,7 @@
+{
+  "name": "NPM check workflow",
+  "description": "Runs format, lint, typecheck and tests for a TypeScript project",
+  "categories": [
+      "TypeScript"
+  ]
+}
