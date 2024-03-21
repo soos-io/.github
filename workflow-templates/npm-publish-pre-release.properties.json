@@ -1,0 +1,7 @@
+{
+  "name": "NPM publish pre release",
+  "description": "Creates pre release version for TypeScript projects",
+  "categories": [
+      "TypeScript"
+  ]
+}
