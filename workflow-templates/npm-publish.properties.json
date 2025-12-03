@@ -1,0 +1,7 @@
+{
+  "name": "Publish to NPM (Pre-release + Release)",
+  "description": "Publish package via Trusted Connection to NPM",
+  "categories": [
+      "TypeScript"
+  ]
+}
