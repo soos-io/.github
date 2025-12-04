@@ -1,18 +1,11 @@
 name: Publish to NPM (Pre-release + Release)
 
 on:
-  # Manual trigger for pre-releases
-  workflow_dispatch:
+  workflow_call:
     inputs:
       version:
-        description: "The version to publish (format: x.x.x-pre.x)"
-        required: true
+        required: false
         type: string
-
-  # Automatic publish for tagged releases
-  push:
-    tags:
-      - "v*"
 
 permissions:
   id-token: write
@@ -27,31 +20,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
 
-      - name: Install dependencies
+      - name: Clean Install
         run: npm ci
 
       - name: Build
         run: npm run build
 
+      # Pre-release logic
       - name: Set pre-release version
-        if: ${{ github.event_name == 'workflow_dispatch' }}
+        if: ${{ inputs.version != '' }}
         run: npm version ${{ inputs.version }} --no-git-tag-version
 
-      - name: Set Git Config
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+      - name: Publish pre-release
+        if: ${{ inputs.version != '' }}
+        run: npm publish --tag next --provenance --access public
 
-      - name: Publish to npm (pre-release)
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: npm publish --tag next --access public
-
-      - name: Publish to npm (tagged release)
-        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
-        run: npm publish --access public
+      # Release logic
+      - name: Publish release
+        if: ${{ inputs.version == '' }}
+        run: npm publish --provenance --access public
