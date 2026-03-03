@@ -18,5 +18,12 @@ jobs:
     - name: Clean Install
       run: npm ci
 
+    - name: Run SOOS SCA
+      uses: soos-io/soos-sca-github-action@v2
+      with:
+        project_name: ${{ github.repository }}
+        client_id: ${{ secrets.SOOS_CLIENT_ID }}
+        api_key: ${{ secrets.SOOS_API_KEY }}
+
     - name: Run Check if Present
       run: npm run check --if-present
