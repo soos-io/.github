@@ -21,7 +21,7 @@ jobs:
     - name: Run SOOS SCA
       uses: soos-io/soos-sca-github-action@v2
       with:
-        project_name: ${{ github.repository }}
+        project_name: ${{ github.event.repository.name }}
         client_id: ${{ secrets.SOOS_CLIENT_ID }}
         api_key: ${{ secrets.SOOS_API_KEY }}
 
