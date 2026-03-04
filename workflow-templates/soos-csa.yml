@@ -9,4 +9,6 @@ on:
 jobs:
   csa:
     uses: soos-io/.github/.github/workflows/soos-csa-docker-workflow.yml@main
+    with:
+      target_image: ${{ vars.SOOS_TARGET_IMAGE }}
     secrets: inherit

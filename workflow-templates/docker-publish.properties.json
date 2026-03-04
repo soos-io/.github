@@ -1,0 +1,7 @@
+{
+  "name": "Push and Publish Docker Image",
+  "description": "Builds and publishes SOOS NPM/Docker images",
+  "categories": [
+      "Docker"
+  ]
+}

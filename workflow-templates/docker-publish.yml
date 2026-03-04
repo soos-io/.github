@@ -1,0 +1,18 @@
+name: Push and Publish Docker Image
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
+  release:
+    types: [published]
+
+jobs:
+  docker:
+    uses: soos-io/.github/.github/workflows/docker-publish-workflow.yml@main
+    secrets: inherit
+    with:
+      image_name: ${{ vars.DOCKER_IMAGE_REPOSITORY }}
+      short_description: ${{ vars.DOCKER_IMAGE_SHORT_DESCRIPTION }}

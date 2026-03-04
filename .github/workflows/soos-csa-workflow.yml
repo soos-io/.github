@@ -1,5 +1,14 @@
 on:
   workflow_call:
+    inputs:
+      target_image:
+        required: true
+        type: string
+    secrets:
+      SOOS_CLIENT_ID:
+        required: true
+      SOOS_API_KEY:
+        required: true
 
 jobs:
   build:
@@ -15,3 +24,4 @@ jobs:
         project_name: ${{ github.event.repository.name }}
         client_id: ${{ secrets.SOOS_CLIENT_ID }}
         api_key: ${{ secrets.SOOS_API_KEY }}
+        target_image: ${{ inputs.target_image }}
