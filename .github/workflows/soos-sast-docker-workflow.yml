@@ -1,5 +1,10 @@
 on:
   workflow_call:
+    secrets:
+      SOOS_CLIENT_ID:
+        required: true
+      SOOS_API_KEY:
+        required: true
 
 jobs:
   build:

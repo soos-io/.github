@@ -1,0 +1,83 @@
+name: Push and Publish Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: Docker image name (e.g. soosio/csa)
+        required: false
+        type: string
+      short_description:
+        description: Docker Hub short description
+        required: false
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Read version from package.json
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        id: get_version
+        run: |
+          version=$(jq -r .version package.json)
+          echo "Version read from package.json: $version"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Docker meta
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ inputs.image_name }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ inputs.image_name }}:alpha
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Promote alpha to beta
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        id: promote-alpha-to-beta
+        run: |
+          docker pull ${{ inputs.image_name }}:alpha
+          docker tag ${{ inputs.image_name }}:alpha ${{ inputs.image_name }}:beta
+          docker push ${{ inputs.image_name }}:beta
+          docker tag ${{ inputs.image_name }}:alpha ${{ inputs.image_name }}:v${{ steps.get_version.outputs.version }}
+          docker push ${{ inputs.image_name }}:v${{ steps.get_version.outputs.version }}
+
+      - name: Promote beta to latest
+        if: github.event_name == 'release' && github.event.action == 'published'
+        id: promote-beta-to-latest
+        run: |
+          docker pull ${{ inputs.image_name }}:beta
+          docker tag ${{ inputs.image_name }}:beta ${{ inputs.image_name }}:latest
+          docker push ${{ inputs.image_name }}:latest
+
+      - name: Update Docker Hub Description
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: peter-evans/dockerhub-description@v5
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ inputs.image_name }}
+          short-description: ${{ inputs.short_description }}
+          readme-filepath: ./README.md
