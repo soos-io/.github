@@ -17,5 +17,6 @@ on:
 jobs:
   publish:
     uses: soos-io/.github/.github/workflows/npm-publish-workflow.yml@main
+    secrets: inherit
     with:
       version: ${{ inputs.version }}

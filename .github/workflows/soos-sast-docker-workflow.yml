@@ -1,0 +1,20 @@
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Run SOOS SAST via Docker
+      run: |
+        docker run --rm \
+          -v "${{ github.workspace }}:/home/soos/wrk/:rw" \
+          soosio/sast:latest \
+          --sarifGenerator opengrep \
+          --projectName "${{ github.event.repository.name }}" \
+          --clientId ${{ secrets.SOOS_CLIENT_ID }} \
+          --apiKey ${{ secrets.SOOS_API_KEY }}

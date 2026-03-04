@@ -1,0 +1,12 @@
+name: Run SOOS SCA
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  sca:
+    uses: soos-io/.github/.github/workflows/soos-sca-workflow.yml@main
+    secrets: inherit

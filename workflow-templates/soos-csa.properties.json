@@ -1,0 +1,7 @@
+{
+  "name": "Run SOOS CSA",
+  "description": "Runs SOOS CSA Analysis",
+  "categories": [
+      "Security"
+  ]
+}
