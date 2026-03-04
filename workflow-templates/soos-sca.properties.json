@@ -1,0 +1,7 @@
+{
+  "name": "Run SOOS SCA Core",
+  "description": "Runs SOOS SCA Core Dependency Scan",
+  "categories": [
+      "Security"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Run SOOS SAST via Docker",
+  "description": "Runs SOOS SAST via Docker Analysis",
+  "categories": [
+      "Security"
+  ]
+}
