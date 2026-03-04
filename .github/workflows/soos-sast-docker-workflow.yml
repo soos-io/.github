@@ -16,5 +16,8 @@ jobs:
           soosio/sast:latest \
           --sarifGenerator opengrep \
           --projectName "${{ github.event.repository.name }}" \
+          --branchUri "${{ github.server_url }}/${{ github.repository }}/tree/${{ github.head_ref || github.ref_name }}" \
+          --branchName "${{ github.head_ref || github.ref_name }}" \
+          --buildUri "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
           --clientId ${{ secrets.SOOS_CLIENT_ID }} \
           --apiKey ${{ secrets.SOOS_API_KEY }}
