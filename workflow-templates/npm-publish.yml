@@ -8,6 +8,11 @@ on:
         description: "The version to publish (format: x.x.x-pre.x)"
         required: true
         type: string
+      shrinkwrap:
+        description: "Generate npm-shrinkwrap.json before publish"
+        required: false
+        type: boolean
+        default: false
 
   # Automatic publish for tagged releases
   push:
@@ -20,3 +25,4 @@ jobs:
     secrets: inherit
     with:
       version: ${{ inputs.version }}
+      shrinkwrap: ${{ inputs.shrinkwrap }}

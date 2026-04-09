@@ -6,6 +6,10 @@ on:
       version:
         required: false
         type: string
+      shrinkwrap:
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   id-token: write
@@ -36,6 +40,10 @@ jobs:
       - name: Set pre-release version
         if: ${{ inputs.version != '' }}
         run: npm version ${{ inputs.version }} --no-git-tag-version
+
+      - name: Create npm shrinkwrap
+        if: ${{ inputs.shrinkwrap }}
+        run: npm shrinkwrap
 
       - name: Publish pre-release
         if: ${{ inputs.version != '' }}
